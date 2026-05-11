@@ -1,31 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CRM AI Dashboard</title>
-
+    <title>CRM AI Dashboard | n8n Integrated</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <link rel="stylesheet" href="/static/style.css" />
+   <link rel="stylesheet" href="/static/style.css">
   </head>
-
   <body>
     <div class="layout">
-
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="sidebar-header">
           <div class="sidebar-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 2L2 7L2 17C2 20.866 6.477 24 12 24C17.523 24 22 20.866 22 17V7L12 2Z"/>
+              <path d="M12 12L7 9M12 12L17 9M12 12V20"/>
             </svg>
-
             <div>
               <div class="sidebar-title">CRM AI</div>
               <div class="sidebar-subtitle">Dashboard</div>
@@ -33,41 +29,59 @@
           </div>
         </div>
 
-        <button class="nav-btn active" onclick="showTab('crm', event)">
-          <span>Dashboard</span>
-        </button>
-
-        <button class="nav-btn" onclick="showTab('automations', event)">
-          <span>Automations</span>
-        </button>
+        <div class="nav-group">
+          <div class="nav-group-title">MAIN</div>
+          <button class="nav-btn active" onclick="showTab('crm')">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            <span><span data-i18n="dashboard">Dashboard</span>
+          </button>
+          <button class="nav-btn" onclick="showTab('automations')">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="1"/>
+              <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"/>
+            </svg>
+            <span><span data-i18n="automations">Automations (n8n)</span>
+          </button>
+        </div>
       </aside>
 
-      <!-- Main -->
+      <!-- Main Content -->
       <main class="main-content">
-
-        <!-- CRM -->
+        <!-- CRM Tab -->
         <div id="crm" class="tab-content active">
           <div class="header">
-            <h1 class="header-title">Sentiment Analysis</h1>
-            <p class="header-subtitle">Analyze text and voice in real-time</p>
+            <h1 class="header-title"><span data-i18n="sentimentAnalysis">Sentiment Analysis</span></h1>
+            <p class="header-subtitle"><span data-i18n="analyze">Analyze</span> voice and text messages in real-time / تحليل الرسائل الصوتية والنصية</p>
           </div>
 
           <div class="card">
             <div class="controls">
               <div class="input-wrapper">
                 <input
-                  id="userInput"
                   type="text"
-                  placeholder="Type your message..."
+                  id="userInput" dir="auto"
+                  placeholder="Type your message or use microphone..." data-i18n-placeholder="inputPlaceholder"
                 />
               </div>
-
               <button class="btn btn-primary" onclick="analyzeText()">
-                Analyze
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span data-i18n="analyze">Analyze</span>
               </button>
-
               <button class="btn btn-danger" id="listenBtn" onclick="startListening()">
-                Listen
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" y1="19" x2="12" y2="23"/>
+                  <line x1="8" y1="23" x2="16" y2="23"/>
+                </svg>
+                <span data-i18n="listen">Listen</span>
               </button>
             </div>
 
@@ -75,16 +89,20 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Message</th>
-                    <th>Sentiment</th>
-                    <th>Score</th>
+                    <th data-i18n="message">Message</th>
+                    <th data-i18n="sentiment">Sentiment</th>
+                    <th data-i18n="score">Score</th>
                   </tr>
                 </thead>
-
                 <tbody id="resultTable">
                   <tr>
-                    <td colspan="3" class="empty-state">
-                      No data yet. Start analyzing.
+                    <td colspan="3" style="text-align: center; padding: 40px;">
+                      <div class="empty-state">
+                        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <p class="empty-text">No data yet. Start analyzing messages! / لا توجد بيانات بعد، ابدأ التحليل.</p>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -93,17 +111,50 @@
           </div>
         </div>
 
-        <!-- Automations -->
+        <!-- Automations Tab -->
         <div id="automations" class="tab-content">
           <div class="header">
-            <h1 class="header-title">Control Center</h1>
+            <h1 class="header-title"><span data-i18n="controlCenter">Control Center</span></h1>
             <p class="header-subtitle">Manage workflows and automations</p>
           </div>
-        </div>
 
+          <div class="automation-container">
+            <svg class="automation-logo" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="20" width="60" height="60" rx="8" fill="#3b82f6" opacity="0.8"/>
+              <circle cx="40" cy="50" r="8" fill="white"/>
+              <path d="M70 50 L100 50" stroke="#3b82f6" stroke-width="3" fill="none"/>
+              <path d="M115 40 L125 50 L115 60" stroke="#3b82f6" stroke-width="2" fill="none"/>
+              <rect x="130" y="20" width="60" height="60" rx="8" fill="#10b981" opacity="0.8"/>
+              <circle cx="160" cy="50" r="8" fill="white"/>
+            </svg>
+
+            <h2 class="automation-title">n8n Automation Engine</h2>
+            <p class="automation-text">
+              Your workflows are running securely on the cloud.
+            </p>
+
+            <a
+              href="https://mohamedgomaa.app.n8n.cloud/home/workflows"
+              target="_blank"
+              class="btn btn-primary"
+              style="
+                display: inline-flex;
+                padding: 16px 32px;
+                font-size: 16px;
+                text-decoration: none;
+                border-radius: 12px;
+              "
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                <polyline points="13 2 13 9 20 9"/>
+              </svg>
+              Open Control Center
+            </a>
+          </div>
+        </div>
       </main>
     </div>
-
     <script src="/static/script.js"></script>
   </body>
 </html>
