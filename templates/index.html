@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM AI Dashboard | n8n Integrated</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --accent: #3498db;
+        --bg: #f4f7f6;
+      }
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: var(--bg);
+        margin: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Sidebar Style */
+      .sidebar {
+        width: 250px;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar h2 {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #444;
+        padding-bottom: 10px;
+      }
+      .nav-btn {
+        background: none;
+        border: none;
+        color: #bdc3c7;
+        padding: 15px;
+        text-align: left;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s;
+        border-radius: 8px;
+        margin-bottom: 5px;
+      }
+      .nav-btn:hover,
+      .nav-btn.active {
+        background: var(--accent);
+        color: white;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+        position: relative;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      /* CRM UI Style */
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+      h1 {
+        color: var(--primary);
+        margin-top: 0;
+      }
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 30px;
+      }
+      input {
+        flex: 1;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        outline: none;
+      }
+      .btn {
+        padding: 12px 24px;
+        cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-weight: bold;
+        transition: 0.3s;
+        text-align: center;
+      }
+      .btn-analyze {
+        background: var(--accent);
+      }
+      .btn-listen {
+        background: #e74c3c;
+      }
+
+      /* Table Style */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        text-align: left;
+      }
+      th {
+        background-color: #f8f9fa;
+        color: var(--primary);
+      }
+      .sentiment-tag {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .Positive {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .Negative {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .Neutral {
+        background-color: #e2e3e5;
+        color: #383d41;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>CRM AI Admin</h2>
+      <button class="nav-btn active" onclick="showTab('crm')">
+        📊 Dashboard
+      </button>
+      <button class="nav-btn" onclick="showTab('automations')">
+        ⚙️ Automations (n8n)
+      </button>
+    </div>
+
+    <div class="main-content">
+      <div id="crm" class="tab-content active">
+        <div class="container">
+          <h1>Sentiment Analysis Log</h1>
+          <p style="color: #7f8c8d; margin-bottom: 30px">
+            Analyze voice and text messages in real-time
+          </p>
+          <div class="controls">
+            <input
+              type="text"
+              id="userInput"
+              placeholder="Type or use mic..."
+            />
+            <button class="btn btn-analyze" onclick="analyzeText()">
+              Analyze Text
+            </button>
+            <button
+              class="btn btn-listen"
+              id="listenBtn"
+              onclick="startListening()"
+            >
+              🎤 Listen
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Message</th>
+                <th>Sentiment</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="resultTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="automations" class="tab-content">
+        <div
+          style="
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+            margin: auto;
+          "
+        >
+          <img
+            src="https://n8n.io/_next/static/media/logo.70b4f8d3.svg"
+            alt="n8n Logo"
+            style="width: 150px; margin-bottom: 20px"
+          />
+          <h2>n8n Automation Engine</h2>
+          <p style="color: #666; max-width: 500px; margin: 0 auto 30px">
+            Your workflows are running securely on the cloud. Click below to
+            manage your AI triggers and WhatsApp automations.
+          </p>
+          <a
+            href="https://mohamedgomaa.app.n8n.cloud/home/workflows"
+            target="_blank"
+            class="btn btn-analyze"
+            style="
+              text-decoration: none;
+              display: inline-block;
+              padding: 15px 40px;
+              font-size: 18px;
+            "
+          >
+            🚀 Open Control Center
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // التنقل بين الصفحات
+      function showTab(tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((tab) => tab.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById(tabId).classList.add("active");
+        event.currentTarget.classList.add("active");
+      }
+
+      // دالة تحليل النص والربط مع n8n
+      async function analyzeText() {
+        const textValue = document.getElementById("userInput").value;
+        if (!textValue) return alert("Please provide text!");
+
+        try {
+          // 1. إرسال النص لسيرفر بايثون للتحليل
+          const response = await fetch("http://127.0.0.1:5000/analyze", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: textValue }),
+          });
+          const data = await response.json();
+
+          // 2. تحديث الجدول في الصفحة
+          addRow(data.text, data.sentiment, data.score);
+
+          // 3. الربط مع n8n (إرسال البيانات للـ Webhook)
+          sendToN8N(data.text, data.sentiment, data.score);
+
+          document.getElementById("userInput").value = "";
+        } catch (error) {
+          console.error("Analysis Error:", error);
+          alert("Error: Make sure Python server is running on port 5000");
+        }
+      }
+
+      // دالة منفصلة لإرسال البيانات لـ n8n مع حل مشكلة الـ CORS
+      function sendToN8N(text, sentiment, score) {
+        const n8nWebhookUrl = "https://mohamedgomaa.app.n8n.cloud/webhook/sentiment-data";
+
+        // استخدام no-cors لتجنب ERR_FAILED في بعض المتصفحات
+        fetch(n8nWebhookUrl, {
+          method: "POST",
+          mode: "no-cors", 
+          headers: { 
+            "Content-Type": "text/plain" // نستخدم plain مع no-cors لضمان العبور
+          },
+          body: JSON.stringify({
+            customer_message: text,
+            analysis_result: sentiment,
+            confidence_score: score,
+            timestamp: new Date().toISOString(),
+          }),
+        })
+          .then(() => {
+            console.log("Successfully triggered n8n (Sent via no-cors mode)");
+          })
+          .catch((err) => {
+            console.error("n8n Network Error:", err);
+          });
+      }
+
+      // دالة الصوت
+      function startListening() {
+        const SpeechRecognition =
+          window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) return alert("Please use Chrome browser.");
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = "en-US";
+        const btn = document.getElementById("listenBtn");
+
+        recognition.onstart = () => {
+          btn.innerText = "Listening...";
+          btn.style.background = "#f1c40f";
+        };
+        recognition.onresult = (e) => {
+          document.getElementById("userInput").value =
+            e.results[0][0].transcript;
+          analyzeText();
+        };
+        recognition.onend = () => {
+          btn.innerText = "🎤 Listen";
+          btn.style.background = "#e74c3c";
+        };
+        recognition.start();
+      }
+
+      // إضافة صف للجدول
+      function addRow(text, sentiment, score) {
+        const table = document.getElementById("resultTable");
+        if (!table) return;
+        
+        const row = `<tr>
+              <td>${text}</td>
+              <td><span class="sentiment-tag ${sentiment}">${sentiment}</span></td>
+              <td>${score.toFixed(2)}</td>
+          </tr>`;
+        table.innerHTML = row + table.innerHTML;
+      }
+</script>
+  </body>
+</html>
