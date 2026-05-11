@@ -49,8 +49,7 @@ async function analyzeText() {
 
 // Send to n8n
 function sendToN8N(text, sentiment, score) {
-  const url =
-    "https://mohamedgomaa.app.n8n.cloud/webhook/sentiment-data";
+  const url = "https://mohamedgomaa.app.n8n.cloud/webhook/sentiment-data";
 
   fetch(url, {
     method: "POST",
@@ -97,6 +96,13 @@ function startListening() {
   recognition.start();
 }
 
+// Sentiment class map
+const sentimentClass = {
+  Positive: "sentiment-positive",
+  Negative: "sentiment-negative",
+  Neutral:  "sentiment-neutral",
+};
+
 // Add table row
 function addRow(text, sentiment, score) {
   const table = document.getElementById("resultTable");
@@ -104,18 +110,14 @@ function addRow(text, sentiment, score) {
   const empty = table.querySelector(".empty-state");
   if (empty) empty.closest("tr").remove();
 
-  const map = {
-    Positive: "sentiment-positive",
-    Negative: "sentiment-negative",
-    Neutral: "sentiment-neutral",
-  };
+  const cls = sentimentClass[sentiment] || "sentiment-neutral";
+  const pct = (score * 100).toFixed(0) + "%";
 
   const row = document.createElement("tr");
-
   row.innerHTML = `
-    <td style="max-width:400px;word-break:break-word;">${text}</td>
-    <td><span class="sentiment-tag ${map[sentiment] || "sentiment-neutral"}">${sentiment}</span></td>
-    <td><div class="score-badge">${(score * 100).toFixed(0)}%</div></td>
+    <td class="msg-cell">${text}</td>
+    <td><span class="sentiment-tag ${cls}">${sentiment}</span></td>
+    <td class="score-value">${pct}</td>
   `;
 
   table.prepend(row);
