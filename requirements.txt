@@ -1,6 +1,4 @@
-Flask==3.1.0
-flask-cors==4.0.0
-textblob==0.18.0
-gunicorn==23.0.0
-speechrecognition==3.10.0
-pyaudio
+Flask
+flask-cors
+textblob
+gunicorn
