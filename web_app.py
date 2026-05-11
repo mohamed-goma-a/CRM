@@ -21,11 +21,11 @@ def analyze():
         analysis = TextBlob(text)
         # تحديد الحالة
         if analysis.sentiment.polarity > 0:
-            result = "Positive 😊"
+            result = "Positive"
         elif analysis.sentiment.polarity < 0:
-            result = "Negative 😡"
+            result = "Negative"
         else:
-            result = "Neutral 😐"
+            result = "Neutral"
 
         return jsonify({
             "text": text,
